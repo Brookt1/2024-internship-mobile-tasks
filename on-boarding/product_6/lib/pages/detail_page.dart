@@ -12,7 +12,13 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  int currentSize = 41;
+  late int currentSize;
+
+  @override
+  void initState() {
+    currentSize = 2;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

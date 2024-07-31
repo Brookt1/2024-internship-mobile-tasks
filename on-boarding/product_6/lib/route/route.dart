@@ -10,13 +10,80 @@ const String searchPage = 'search';
 const String addUpdatePage = 'add';
 
 Route<dynamic> controller(RouteSettings settings) {
-  if (settings.name == addUpdatePage) {
-    return MaterialPageRoute(builder: (context) => AddUpdatePage());
-  } else if (settings.name == detailPage) {
-    return MaterialPageRoute(builder: (context) => DetailPage());
-  } else if (settings.name == searchPage) {
-    return MaterialPageRoute(builder: (context) => SearchPage());
-  } else {
-    return MaterialPageRoute(builder: (context) => HomePage());
+  switch (settings.name) {
+    case addUpdatePage:
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            AddUpdatePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
+    case detailPage:
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => DetailPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
+    case searchPage:
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SearchPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
+    case homePage:
+    default:
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(0.0, 1.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
   }
 }
