@@ -36,7 +36,7 @@ class _DetailPageState extends State<DetailPage> {
               backButton(context, Colors.indigo)
             ]),
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 16,
                 right: 16,
               ),
