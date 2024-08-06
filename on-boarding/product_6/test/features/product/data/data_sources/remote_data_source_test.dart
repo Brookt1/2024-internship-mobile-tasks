@@ -20,7 +20,7 @@ void main() {
 
   const testId = '1';
 
-  group('get  products', () {
+  group('get specific product by Id', () {
     test('should return  product model when the response code is 200',
         () async {
       // arrange
@@ -38,7 +38,7 @@ void main() {
       );
 
       // act
-      final result = await productRemoteDataSourceImpl.getProduct(testId);
+      final result = await productRemoteDataSourceImpl.getProductById(testId);
 
       // assert
 
@@ -63,7 +63,7 @@ void main() {
       );
 
       // act
-      final result = productRemoteDataSourceImpl.getProduct(testId);
+      final result = productRemoteDataSourceImpl.getProductById(testId);
 
       // assert
 

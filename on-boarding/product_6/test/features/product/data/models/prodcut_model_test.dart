@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:product_6/features/product/data/models/product_model.dart';
-import 'package:product_6/features/product/domain/entities/product.dart';
+import 'package:product_6/features/product/domain/entities/product_entity.dart';
 
 import '../../../../helpers/json_reader.dart';
 
@@ -18,7 +18,7 @@ void main() {
   test(
     'should a subclass of Product',
     () async {
-      expect(testProductModel, isA<Product>());
+      expect(testProductModel, isA<ProductEntity>());
     },
   );
 

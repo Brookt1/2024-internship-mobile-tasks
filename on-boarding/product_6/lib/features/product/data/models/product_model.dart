@@ -1,6 +1,6 @@
-import '../../domain/entities/product.dart';
+import '../../domain/entities/product_entity.dart';
 
-class ProductModel extends Product {
+class ProductModel extends ProductEntity {
   const ProductModel({
     required String id,
     required String name,
@@ -34,4 +34,12 @@ class ProductModel extends Product {
       'imageUrl': imageUrl,
     };
   }
+
+  ProductEntity toEntity() => ProductEntity(
+        id: id,
+        name: name,
+        description: description,
+        price: price,
+        imageUrl: imageUrl,
+      );
 }

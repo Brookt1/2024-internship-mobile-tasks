@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
-import '../entities/product.dart';
+import '../entities/product_entity.dart';
 import '../repositories/product_repository.dart';
 
 class InsertProductUsecase {
   final ProductRepository productRepository;
-  final Product product;
+  final ProductEntity product;
 
   InsertProductUsecase(
       {required this.productRepository, required this.product});

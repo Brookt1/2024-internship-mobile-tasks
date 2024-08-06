@@ -41,6 +41,7 @@ dependencies:
   http: ^1.2.2
   mockito: ^5.4.4
   build_runner: ^2.4.11
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
