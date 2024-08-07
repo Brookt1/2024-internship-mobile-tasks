@@ -12,7 +12,7 @@ import '../data_sources/remote_data_source.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
   final ProductRemoteDataSource remoteDataSource;
-  final ProdcutLocalDataSource localDataSource;
+  final ProductLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   ProductRepositoryImpl(

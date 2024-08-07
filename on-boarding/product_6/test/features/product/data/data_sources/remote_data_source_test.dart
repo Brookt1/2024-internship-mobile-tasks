@@ -63,11 +63,11 @@ void main() {
       );
 
       // act
-      final result = productRemoteDataSourceImpl.getProductById(testId);
+      final call = productRemoteDataSourceImpl.getProductById;
 
       // assert
 
-      expect(result, throwsA(isA<ServerException>()));
+      expect(() => call(testId), throwsA(isA<ServerException>()));
     });
   });
 }

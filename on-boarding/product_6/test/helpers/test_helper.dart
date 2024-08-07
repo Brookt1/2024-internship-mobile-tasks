@@ -5,12 +5,14 @@ import 'package:product_6/core/network/network_info.dart';
 import 'package:product_6/features/product/data/data_sources/local_data_source.dart';
 import 'package:product_6/features/product/data/data_sources/remote_data_source.dart';
 import 'package:product_6/features/product/domain/repositories/product_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @GenerateMocks([
   ProductRepository,
   ProductRemoteDataSource,
-  ProdcutLocalDataSource,
+  ProductLocalDataSource,
   InternetConnectionChecker,
+  SharedPreferences,
   NetworkInfo,
 ], customMocks: [
   MockSpec<http.Client>(as: #MockHttpClient)

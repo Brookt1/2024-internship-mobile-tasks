@@ -13,13 +13,13 @@ import '../../../../helpers/test_helper.mocks.dart';
 
 void main() {
   late MockProductRemoteDataSource mockProductRemoteDataSource;
-  late MockProdcutLocalDataSource mockProductLocalDataSource;
+  late MockProductLocalDataSource mockProductLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
   late ProductRepositoryImpl productRepositoryImpl;
 
   setUp(() {
     mockProductRemoteDataSource = MockProductRemoteDataSource();
-    mockProductLocalDataSource = MockProdcutLocalDataSource();
+    mockProductLocalDataSource = MockProductLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
     productRepositoryImpl = ProductRepositoryImpl(
       remoteDataSource: mockProductRemoteDataSource,
