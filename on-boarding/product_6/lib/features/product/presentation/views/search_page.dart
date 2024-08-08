@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:product_6/pages/home_page.dart';
-import 'package:product_6/widgets/back_button.dart';
-import 'package:product_6/widgets/custom_outlined_button.dart';
-import 'package:product_6/widgets/cutom_text.dart';
+import 'home_page.dart';
+import '../widgets/back_button.dart';
+import '../widgets/custom_outlined_button.dart';
+import '../widgets/cutom_text.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});

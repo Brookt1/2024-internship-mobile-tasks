@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:product_6/pages/add_update_page.dart';
-import 'package:product_6/pages/detail_page.dart';
-import 'package:product_6/pages/home_page.dart';
-import 'package:product_6/pages/search_page.dart';
+import '../../features/product/presentation/views/add_update_page.dart';
+import '../../features/product/presentation/views/detail_page.dart';
+import '../../features/product/presentation/views/home_page.dart';
+import '../../features/product/presentation/views/search_page.dart';
 
 const String homePage = 'home';
 const String detailPage = 'detail';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:product_6/widgets/back_button.dart';
-import 'package:product_6/widgets/custom_outlined_button.dart';
-import 'package:product_6/widgets/custom_textfiled.dart';
-import 'package:product_6/widgets/cutom_text.dart';
+import '../widgets/back_button.dart';
+import '../widgets/custom_outlined_button.dart';
+import '../widgets/custom_textfiled.dart';
+import '../widgets/cutom_text.dart';
 
 class AddUpdatePage extends StatelessWidget {
   const AddUpdatePage({super.key});

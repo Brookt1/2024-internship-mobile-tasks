@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:product_6/widgets/custom_icon.dart';
-import 'package:product_6/widgets/custom_image_container.dart';
-import 'package:product_6/widgets/cutom_text.dart';
-import 'package:product_6/route/route.dart' as route;
+import 'package:product_6/features/product/presentation/widgets/custom_icon.dart';
+import 'package:product_6/features/product/presentation/widgets/custom_image_container.dart';
+import 'package:product_6/features/product/presentation/widgets/cutom_text.dart';
+import 'package:product_6/config/route/route.dart' as route;
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
