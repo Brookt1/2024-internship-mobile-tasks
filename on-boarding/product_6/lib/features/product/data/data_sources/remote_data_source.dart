@@ -25,8 +25,23 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
   ProductRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<ProductModel>> getAllProducts() {
-    throw UnimplementedError();
+  Future<List<ProductModel>> getAllProducts() async {
+    final response = await client.get(
+      Uri.parse(
+        Urls.getProducts(),
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // TODO: fix the return of list of ProductModel
+      return [
+        ProductModel.fromJson(
+          json.decode(response.body),
+        )
+      ];
+    } else {
+      throw ServerException();
+    }
   }
 
   @override
