@@ -21,8 +21,7 @@ class ProductRepositoryImpl extends ProductRepository {
       required this.networkInfo});
 
   @override
-  Future<Either<Failure, bool>> deleteProduct(int id) {
-    // TODO: implement deleteProduct
+  Future<Either<Failure, bool>> deleteProduct(String id) {
     throw UnimplementedError();
   }
 

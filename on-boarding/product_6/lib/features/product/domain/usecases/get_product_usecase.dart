@@ -6,11 +6,10 @@ import '../repositories/product_repository.dart';
 
 class GetProductUsecase {
   final ProductRepository productRepository;
-  final String id;
 
-  GetProductUsecase({required this.productRepository, required this.id});
+  GetProductUsecase({required this.productRepository});
 
-  Future<Either<Failure, ProductEntity>> call() async {
+  Future<Either<Failure, ProductEntity>> call(String id) async {
     return await productRepository.getProductById(id);
   }
 }

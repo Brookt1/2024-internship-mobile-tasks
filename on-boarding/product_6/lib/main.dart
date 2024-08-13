@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'route/route.dart' as route;
+import 'app.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-      ),
-      onGenerateRoute: route.controller,
-      initialRoute: route.homePage,
-    ),
-  );
+import 'injection_container.dart' as di;
+
+Future<void> main() async {
+  await di.init();
+  runApp(App());
 }

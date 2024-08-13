@@ -165,7 +165,8 @@ class SearchPage extends StatelessWidget {
               height: 590,
               child: ListView.builder(
                 itemCount: 3,
-                itemBuilder: (context, idx) => prodcutList(),
+                // TODO: implement the search
+                itemBuilder: (context, idx) => const Placeholder(),
               ),
             )
           ],

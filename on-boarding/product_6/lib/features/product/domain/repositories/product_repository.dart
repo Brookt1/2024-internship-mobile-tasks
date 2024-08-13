@@ -14,5 +14,5 @@ abstract class ProductRepository {
 
   Future<Either<Failure, bool>> updateProduct(ProductEntity product);
 
-  Future<Either<Failure, bool>> deleteProduct(int id);
+  Future<Either<Failure, bool>> deleteProduct(String id);
 }

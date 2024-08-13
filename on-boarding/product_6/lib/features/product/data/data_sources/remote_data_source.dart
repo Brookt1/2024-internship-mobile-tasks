@@ -33,12 +33,14 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      // TODO: fix the return of list of ProductModel
-      return [
-        ProductModel.fromJson(
-          json.decode(response.body),
-        )
-      ];
+      // Parse the JSON response
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+      // Extract the list of products from the "data" key
+      final List<dynamic> productData = jsonResponse['data'];
+
+      // Map each item in the list to a ProductModel and return the list
+      return productData.map((json) => ProductModel.fromJson(json)).toList();
     } else {
       throw ServerException();
     }

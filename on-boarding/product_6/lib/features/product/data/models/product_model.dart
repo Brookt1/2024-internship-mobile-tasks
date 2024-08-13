@@ -20,7 +20,7 @@ class ProductModel extends ProductEntity {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      price: json['price'],
+      price: (json['price'] as num).toDouble(),
       imageUrl: json['imageUrl'],
     );
   }

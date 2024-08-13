@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:product_6/features/product/presentation/widgets/custom_icon.dart';
-import 'package:product_6/features/product/presentation/widgets/custom_image_container.dart';
-import 'package:product_6/features/product/presentation/widgets/cutom_text.dart';
-import 'package:product_6/config/route/route.dart' as route;
+import '../../../../config/route/route.dart' as route;
+import '../../domain/entities/product_entity.dart';
+import '../bloc/product_bloc.dart';
+import '../widgets/custom_icon.dart';
+import '../widgets/custom_image_container.dart';
+import '../widgets/cutom_text.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<ProductBloc>(context).add(LoadAllProductEvent());
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: () {
@@ -109,16 +113,37 @@ class HomePage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              SizedBox(
-                height: 600,
-                child: ListView.builder(
-                  itemCount: 3,
-                  itemBuilder: (context, idx) => GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, route.detailPage);
-                      },
-                      child: prodcutList()),
-                ),
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is LoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is LoadedAllProductsState) {
+                    return SizedBox(
+                      height: 600,
+                      child: ListView.builder(
+                        itemCount: state.products.length,
+                        itemBuilder: (context, idx) => GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, route.detailPage);
+                          },
+                          child: prodcutList(state.products[
+                              idx]), // Replace `ProductList` with your widget to display the product
+                        ),
+                      ),
+                    );
+                  } else if (state is ErrorState) {
+                    return const Center(
+                      child: Text(
+                        'Failed to load products. Please try again later.',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               )
             ],
           ),
@@ -128,7 +153,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget prodcutList() {
+Widget prodcutList(ProductEntity product) {
   return Card(
     elevation: 10,
     child: Container(
@@ -140,17 +165,9 @@ Widget prodcutList() {
           topRight: Radius.circular(16),
         ),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          CustomImageContainer(
-            height: 160,
-            width: double.infinity,
-            imagePath: 'lib/assets/images/shoes.jpg',
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
+          imageLoader(product.imageUrl),
           Padding(
             padding: EdgeInsets.only(
               left: 16,
@@ -159,16 +176,16 @@ Widget prodcutList() {
             child: Row(
               children: [
                 Text(
-                  'Derby Leather Shoes',
-                  style: TextStyle(
+                  product.name,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  '\$120',
-                  style: TextStyle(
+                  '\$${product.price}',
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -176,7 +193,7 @@ Widget prodcutList() {
               ],
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(
               left: 16,
               right: 16,
@@ -184,7 +201,7 @@ Widget prodcutList() {
             child: Row(
               children: [
                 CustomText(
-                  text: " Men's shoe",
+                  text: 'Category',
                   color: Colors.grey,
                 ),
                 Spacer(),
@@ -201,6 +218,42 @@ Widget prodcutList() {
           )
         ],
       ),
+    ),
+  );
+}
+
+Widget imageLoader(url) {
+  return ClipRRect(
+    borderRadius: const BorderRadius.only(
+      topLeft: Radius.circular(16),
+      topRight: Radius.circular(16),
+    ),
+    child: Image.network(
+      url,
+      height: 160,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      (loadingProgress.expectedTotalBytes ?? 1)
+                  : null,
+            ),
+          );
+        }
+      },
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return const Center(
+            child: Text('Failed to load image',
+                style: TextStyle(color: Colors.red)));
+      },
     ),
   );
 }

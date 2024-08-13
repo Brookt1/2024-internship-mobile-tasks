@@ -6,12 +6,22 @@ import '../repositories/product_repository.dart';
 
 class UpdateProductUsecase {
   final ProductRepository productRepository;
-  final ProductEntity product;
 
-  UpdateProductUsecase(
-      {required this.productRepository, required this.product});
+  UpdateProductUsecase({required this.productRepository});
 
-  Future<Either<Failure, bool>> call() async {
+  Future<Either<Failure, bool>> call({
+    required String id,
+    required String name,
+    required String description,
+    required double price,
+    required String imageUrl,
+  }) async {
+    final product = ProductEntity(
+        id: id,
+        name: name,
+        description: description,
+        price: price,
+        imageUrl: imageUrl);
     return await productRepository.updateProduct(product);
   }
 }
