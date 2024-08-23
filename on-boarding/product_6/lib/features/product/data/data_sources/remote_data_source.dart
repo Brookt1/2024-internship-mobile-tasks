@@ -53,11 +53,13 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
             productData.map((json) => ProductModel.fromJson(json)).toList();
 
         await productLocalDataSource.cacheProducts(products);
-
+        print(products);
         return products;
       } else {
         throw ServerException();
       }
+    } on CacheException {
+      throw CacheException();
     } catch (e) {
       throw ServerException();
     }
@@ -116,7 +118,6 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
 
   @override
   Future<List<ProductModel>> getProductsByCategory(String category) {
-    // TODO: implement getProductsByCategory
     throw UnimplementedError();
   }
 
@@ -159,38 +160,42 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
 
         throw Exception();
       }
-    } on ServerException {
+    } on ServerException catch (e) {
+      log(e.message);
       rethrow;
     } catch (e) {
+      log(e.toString());
       throw ServerException();
     }
   }
 
   @override
   Future<bool> updateProduct(ProductModel product) async {
-    final uri = Uri.parse(Urls.getProductById(product.id));
-    final request = http.Request('PUT', uri);
+    try {
+      final uri = Uri.parse(Urls.getProductById(product.id));
+      final body = jsonEncode({
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+      });
 
-    final body = jsonEncode({
-      'name': product.name,
-      'description': product.description,
-      'price': product.price,
-    });
+      final token = await productLocalDataSource.getToken();
+      final response = await client.put(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body,
+      );
 
-    request.body = body;
-
-    final token = await productLocalDataSource.getToken();
-    request.headers['Content-Type'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer $token';
-
-    final response = await request.send();
-
-    if (response.statusCode == 200) {
-      log('Product updated successfully!');
-      return true;
-    } else {
-      log('Error updating product: ${response.statusCode}');
-      return false;
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw ServerException();
     }
   }
 }

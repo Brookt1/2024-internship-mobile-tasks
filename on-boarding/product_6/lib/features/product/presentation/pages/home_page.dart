@@ -1,17 +1,25 @@
 import '../../../../config/route/route.dart' as route;
 import 'pages.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    context.read<ProductBloc>().add(LoadAllProductEvent());
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<ProductBloc>().add(LoadAllProductEvent());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: () {
-          // context.read<ProductBloc>().add(CreateProductEvent());
           Navigator.pushNamed(context, route.addUpdatePage);
         },
         child: Container(
@@ -85,8 +93,8 @@ class HomePage extends StatelessWidget {
                         ),
                       );
                     }
-                    return SizedBox(
-                      height: 600,
+                    return Expanded(
+                      // height: 600,
                       child: ListView.builder(
                         itemCount: state.products.length,
                         itemBuilder: (context, idx) => GestureDetector(

@@ -14,3 +14,4 @@ export '../widgets/image_loader.dart';
 export '../widgets/product_list_builder.dart';
 export '../widgets/user_profile.dart';
 export 'dart:io';
+export '../widgets/image_picker_container.dart';

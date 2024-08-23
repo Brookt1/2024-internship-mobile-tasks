@@ -44,6 +44,58 @@ void main() {
   );
 
   const testId = '1';
+
+  group('insertProduct', () {
+    test('should return true when the product is successfully inserted',
+        () async {
+      // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(mockProductRemoteDataSource.insertProduct(any))
+          .thenAnswer((_) async => true);
+
+      // act
+      final result =
+          await productRepositoryImpl.insertProduct(testProductEntity);
+
+      // assert
+      expect(result, const Right(true));
+    });
+
+    test('should return server failure when the insertion fails', () async {
+      // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(mockProductRemoteDataSource.insertProduct(any))
+          .thenThrow(ServerException(message: 'Failed to insert product'));
+
+      // act
+      final result =
+          await productRepositoryImpl.insertProduct(testProductEntity);
+
+      // assert
+      expect(result, const Left(ServerFailure('Failed to insert product')));
+    });
+
+    // test('should return connection failure when the device has no internet',
+    //     () async {
+    //   // arrange
+    //   when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+
+    //   // act
+    //   final result =
+    //       await productRepositoryImpl.insertProduct(testProductEntity);
+
+    //   // assert
+    //   expect(
+    //     result,
+    //     equals(
+    //       const Left(
+    //         ConnectionFailure(),
+    //       ),
+    //     ),
+    //   );
+    // });
+  });
+
   group('get product by id', () {
     test('should return product when a call to data source is successful',
         () async {

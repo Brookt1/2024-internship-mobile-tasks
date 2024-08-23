@@ -22,8 +22,8 @@ class SearchPage extends StatelessWidget {
             const SizedBox(
               width: 70,
             ),
-            CustomText(
-              text: 'Add Product',
+            const CustomText(
+              text: 'Search Product',
               fontSize: 16,
             ),
           ],
@@ -117,15 +117,15 @@ class SearchPage extends StatelessWidget {
                                 ),
                               ),
                               RangeSlider(
-                                activeColor: Color(0xFF3F51F3),
-                                values: RangeValues(
+                                activeColor: const Color(0xFF3F51F3),
+                                values: const RangeValues(
                                   0.2,
                                   0.8,
                                 ),
                                 onChanged: (value) {},
                               ),
                               const Spacer(),
-                              CustomOutlinedButton(
+                              const CustomOutlinedButton(
                                 text: 'APPLY',
                                 width: 300,
                                 height: 44,

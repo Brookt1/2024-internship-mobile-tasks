@@ -57,3 +57,5 @@ class UpdateTextFieldEvent extends ProductEvent {
 }
 
 class AddProductEvent extends ProductEvent {}
+
+class ResetMessageStateEvent extends ProductEvent {}

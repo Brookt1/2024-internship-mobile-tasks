@@ -41,7 +41,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await _getUserUsecase();
     result.fold((failure) {
-      emit(SignInState());
+      emit(ErrorState(message: failure.message));
+      add(LogOutEvent());
     }, (data) {
       emit(UserIsReady());
     });
@@ -55,6 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold((failure) {
       emit(ErrorState(message: failure.message));
+      // add();
     }, (data) {
       emit(SignedInState());
     });

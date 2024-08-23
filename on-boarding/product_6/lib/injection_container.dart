@@ -19,7 +19,6 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/product/data/data_sources/local_data_source.dart';
 import 'features/product/data/data_sources/remote_data_source.dart';
 import 'features/product/data/repositories/product_repository_impl.dart';
-import 'features/auth/domain/entities/user_entity.dart';
 import 'features/product/domain/repositories/product_repository.dart';
 import 'features/product/domain/usecases/delete_prodcut_usecase.dart';
 import 'features/product/domain/usecases/get_all_prodcuts_usecase.dart';

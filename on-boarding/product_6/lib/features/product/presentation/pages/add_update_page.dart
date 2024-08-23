@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config/route/route.dart' as route;
 
 import 'pages.dart';
@@ -63,11 +65,13 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
       listener: (context, state) {
         if (state is ErrorState) {
           showCustomSnackBar(context, state.message);
-        } else if (state is ShowMessageState) {
-          showCustomSnackBar(context, state.message);
+        } else if (state is LoadedSingleProductState) {
+          Navigator.pushReplacementNamed(context, route.detailPage);
         } else if (state is LoadedAllProductsState) {
           Navigator.pushNamedAndRemoveUntil(
               context, route.homePage, (Route<dynamic> route) => false);
+        } else {
+          log(state.toString());
         }
       },
       child: Scaffold(
@@ -159,10 +163,6 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
                       width: double.infinity,
                       child: CustomTextfiled(
                         controller: _priceController,
-                        // onChange: (value) {
-                        //   context.read<ProductBloc>().add(
-                        //       UpdateTextFieldEvent(name: 'price', value: value));
-                        // },
                       ),
                     ),
                     const SizedBox(
@@ -181,44 +181,50 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
                       width: double.infinity,
                       child: CustomTextfiled(
                         controller: _descriptionController,
-                        // onChange: (value) {
-                        //   context.read<ProductBloc>().add(UpdateTextFieldEvent(
-                        //       name: 'desciption', value: value));
-                        // },
                       ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    CustomOutlinedButton(
-                      text: widget.isUpdate ? 'UPDATE' : 'ADD',
-                      width: 300,
-                      height: 44,
-                      backgroundColor: const Color(0xFF3F51F3),
-                      color: Colors.white,
-                      onPressed: () {
-                        if (widget.isUpdate) {
-                          context.read<ProductBloc>().add(
-                                UpdateProductEvent(
-                                  id: product!.id,
-                                  name: _nameController.text,
-                                  description: _descriptionController.text,
-                                  price: _priceController.text,
-                                  imageUrl: '',
-                                ),
-                              );
-                        } else {
-                          context.read<ProductBloc>().add(
-                                CreateProductEvent(
-                                    id: '',
-                                    name: _nameController.text,
-                                    description: _descriptionController.text,
-                                    price: _priceController.text,
-                                    imageUrl: _imagePath),
-                              );
-                        }
+                    BlocBuilder<ProductBloc, ProductState>(
+                      builder: (context, state) {
+                        return CustomOutlinedButton(
+                          text: state is LoadingState
+                              ? 'Loading...'
+                              : widget.isUpdate
+                                  ? 'UPDATE'
+                                  : 'ADD',
+                          width: 300,
+                          height: 44,
+                          backgroundColor: const Color(0xFF3F51F3),
+                          color: Colors.white,
+                          onPressed: () {
+                            if (widget.isUpdate) {
+                              context.read<ProductBloc>().add(
+                                    UpdateProductEvent(
+                                      id: product!.id,
+                                      name: _nameController.text,
+                                      description: _descriptionController.text,
+                                      price: _priceController.text,
+                                      imageUrl: '',
+                                    ),
+                                  );
+                            } else {
+                              context.read<ProductBloc>().add(
+                                    CreateProductEvent(
+                                        id: '',
+                                        name: _nameController.text,
+                                        description:
+                                            _descriptionController.text,
+                                        price: _priceController.text,
+                                        imageUrl: _imagePath),
+                                  );
+                            }
+                          },
+                        );
                       },
                     ),
+                    const SizedBox(height: 10),
                     const CustomOutlinedButton(
                       text: 'DELETE',
                       width: 300,
@@ -231,66 +237,6 @@ class _AddUpdatePageState extends State<AddUpdatePage> {
             );
           },
         ),
-      ),
-    );
-  }
-}
-
-class ImagePickerContainer extends StatefulWidget {
-  const ImagePickerContainer({super.key, required this.pickImage});
-
-  final Future<File?> Function() pickImage;
-
-  @override
-  State<ImagePickerContainer> createState() => _ImagePickerContainerState();
-}
-
-class _ImagePickerContainerState extends State<ImagePickerContainer> {
-  File? _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final ret = await widget.pickImage();
-        if (ret != null) {
-          setState(() {
-            _image = ret;
-          });
-        }
-      },
-      child: Container(
-        height: 190,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 230, 230, 230),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(16),
-          ),
-          image: _image != null
-              ? DecorationImage(
-                  image: FileImage(_image!),
-                  fit: BoxFit.cover,
-                )
-              : null,
-        ),
-        child: _image == null
-            ? const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.image,
-                    size: 36,
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  CustomText(
-                    text: 'Upload Image',
-                  ),
-                ],
-              )
-            : null,
       ),
     );
   }

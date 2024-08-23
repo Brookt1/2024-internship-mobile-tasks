@@ -40,8 +40,8 @@ class AuthRepositoryImp implements AuthRepository {
 
         return Right(userEntity);
       } catch (e) {
-        log('in catch');
-        return const Left(ServerFailure('Something went wrong'));
+        log(e.toString());
+        return const Left(UnkownFailure());
       }
     } else {
       log('outside');

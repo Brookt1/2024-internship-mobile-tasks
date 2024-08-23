@@ -44,6 +44,8 @@ class AddedProductState extends ProductState {}
 
 class AddProuctSTate extends ProductState {}
 
+class NeutralState extends ProductState {}
+
 class ShowMessageState extends ProductState {
   final String message;
   const ShowMessageState({required this.message});

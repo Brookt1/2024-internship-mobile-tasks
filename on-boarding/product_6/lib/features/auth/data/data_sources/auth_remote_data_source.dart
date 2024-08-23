@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/error/exception.dart';
-import '../../../../injection_container.dart';
+
 import '../models/sign_in_model.dart';
 import '../models/sign_up_model.dart';
 import '../models/signed_in_model.dart';
@@ -32,7 +32,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getUser() async {
     try {
       final token = await _authLocalDataSource.getToken();
-
+      log(token);
       final response = await http.get(
         Uri.parse(Urls.getUser()),
         headers: {
@@ -40,7 +40,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'Authorization': 'Bearer $token',
         },
       );
-
+      log(response.statusCode.toString());
       if (response.statusCode == 200) {
         final Map<String, dynamic> userDetails = json.decode(response.body);
 
@@ -49,6 +49,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw Exception();
       }
     } catch (e) {
+      log(e.toString());
       throw UnknownException();
     }
   }
@@ -56,8 +57,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<SignedInModel> signIn(SignInModel signIn) async {
     try {
-      final url = Uri.parse(
-          'https://g5-flutter-learning-path-be.onrender.com/api/v2/auth/login');
+      final url = Uri.parse(Urls.signIn());
 
       final response = await _client.post(
         url,
@@ -85,8 +85,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<bool> signUp(SignUpModel signUp) async {
     try {
-      final url = Uri.parse(
-          'https://g5-flutter-learning-path-be.onrender.com/api/v2/auth/register');
+      final url = Uri.parse(Urls.signUp());
 
       final response = await _client.post(
         url,

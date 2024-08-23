@@ -50,6 +50,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<UpdateProductEvent>(_onUpdateProduct);
     on<CreateProductEvent>(_onCreateProduct);
     on<DeleteProductEvent>(_onDeleteProduct);
+    on<ResetMessageStateEvent>((event, emit) {
+      emit(NeutralState());
+    });
   }
 
   Future<void> _onLoadAllProducts(
@@ -85,28 +88,33 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(LoadingState());
 
     final inputEither = _inputConverter.stringToUnsignedDouble(event.price);
-    inputEither.fold((failure) {
-      emit(ErrorState(message: failure.message));
-    }, (data) async {
-      final call = await _updateProductUsecase(
+
+    await inputEither.fold(
+      (failure) async {
+        emit(ErrorState(message: failure.message));
+      },
+      (data) async {
+        final call = await _updateProductUsecase(
           id: event.id,
           description: event.description,
           imageUrl: event.imageUrl,
           name: event.name,
-          price: data);
+          price: data,
+        );
 
-      call.fold(
-        (failure) {
-          log(failure.message);
-          emit(ErrorState(message: failure.message));
-        },
-        (data) {
-          emit(
-              const ShowMessageState(message: 'Product successfully updated!'));
-          add(LoadAllProductEvent());
-        },
-      );
-    });
+        call.fold(
+          (failure) {
+            emit(ErrorState(message: failure.message));
+          },
+          (data) async {
+            emit(const ShowMessageState(
+                message: 'Product successfully updated!'));
+
+            add(GetSingleProductEvent(id: event.id));
+          },
+        );
+      },
+    );
   }
 
   Future<void> _onCreateProduct(
@@ -132,9 +140,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
         await call.fold(
           (failure) async {
-            if (!emit.isDone) {
-              emit(ErrorState(message: failure.message));
-            }
+            emit(ErrorState(message: failure.message));
           },
           (data) async {
             emit(const ShowMessageState(

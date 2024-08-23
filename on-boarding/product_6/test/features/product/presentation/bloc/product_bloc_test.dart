@@ -47,41 +47,44 @@ void main() {
     expect(productBloc.state, IntialState());
   });
 
-  group('LoadAllProductEvent', () {
-    blocTest<ProductBloc, ProductState>(
-      'emits [LoadingState, LoadedAllProductsState] when MyEvent is added.',
-      build: () {
-        when(mockGetAllProductsUsecase()).thenAnswer(
-          (_) async => const Right(
-            [testProductEntity],
-          ),
-        );
-        return productBloc;
-      },
-      act: (bloc) => bloc.add(LoadAllProductEvent()),
-      wait: const Duration(milliseconds: 500),
-      expect: () => [
-        LoadingState(),
-        const LoadedAllProductsState(products: [testProductEntity])
-      ],
-    );
+  group(
+    'LoadAllProductEvent',
+    () {
+      blocTest<ProductBloc, ProductState>(
+        'emits [LoadingState, LoadedAllProductsState] when MyEvent is added.',
+        build: () {
+          when(mockGetAllProductsUsecase()).thenAnswer(
+            (_) async => const Right(
+              [testProductEntity],
+            ),
+          );
+          return productBloc;
+        },
+        act: (bloc) => bloc.add(LoadAllProductEvent()),
+        wait: const Duration(milliseconds: 500),
+        expect: () => [
+          LoadingState(),
+          const LoadedAllProductsState(products: [testProductEntity])
+        ],
+      );
 
-    blocTest<ProductBloc, ProductState>(
-      'emits [LoadingState, ErrorState] when LoadAllProductEvent is added.',
-      build: () {
-        when(mockGetAllProductsUsecase()).thenAnswer(
-          (_) async => const Left(ServerFailure('Server failure')),
-        );
-        return productBloc;
-      },
-      act: (bloc) => bloc.add(LoadAllProductEvent()),
-      wait: const Duration(milliseconds: 500),
-      expect: () => [
-        LoadingState(),
-        const ErrorState(message: 'Server failure'),
-      ],
-    );
-  });
+      blocTest<ProductBloc, ProductState>(
+        'emits [LoadingState, ErrorState] when LoadAllProductEvent is added.',
+        build: () {
+          when(mockGetAllProductsUsecase()).thenAnswer(
+            (_) async => const Left(ServerFailure('Server failure')),
+          );
+          return productBloc;
+        },
+        act: (bloc) => bloc.add(LoadAllProductEvent()),
+        wait: const Duration(milliseconds: 500),
+        expect: () => [
+          LoadingState(),
+          const ErrorState(message: 'Server failure'),
+        ],
+      );
+    },
+  );
 
   group('GetSingleProductEvent', () {
     blocTest<ProductBloc, ProductState>(

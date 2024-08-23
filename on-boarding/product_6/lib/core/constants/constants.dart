@@ -6,4 +6,6 @@ class Urls {
   static String getAllProducts() => '$baseUrl/products';
 
   static String getUser() => '$baseUrl/users/me';
+  static String signIn() => '$baseUrl/auth/login';
+  static String signUp() => '$baseUrl/auth/register';
 }

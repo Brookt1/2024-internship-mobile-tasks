@@ -44,26 +44,38 @@ class _SplashPageState extends State<SplashPage> {
         ),
       ],
       child: Scaffold(
-        body: Container(
-          height: height,
-          width: width,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              const Color(0xFF3F51F3),
-              const Color(0xFF3F51F3).withOpacity(0.2)
-            ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-          ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedEcomLogo(),
-              CustomText(
-                text: 'Ecommerce APP',
-                fontSize: 35,
-                color: Colors.white,
-              )
-            ],
-          ),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'lib/assets/images/splash_bg.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                height: height,
+                width: width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    const Color(0xFF3F51F3),
+                    const Color(0xFF3F51F3).withOpacity(0.2)
+                  ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedEcomLogo(),
+                    CustomText(
+                      text: 'Ecommerce APP',
+                      fontSize: 35,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

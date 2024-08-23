@@ -24,8 +24,10 @@ class _DetailPageState extends State<DetailPage> {
           listener: (context, state) {
             if (state is ShowMessageState) {
               showCustomSnackBar(context, state.message);
+              context.read<ProductBloc>().add(ResetMessageStateEvent());
             } else if (state is ErrorState) {
               showCustomSnackBar(context, state.message);
+              context.read<ProductBloc>().add(LoadAllProductEvent());
             } else if (state is LoadedAllProductsState) {
               Navigator.pushReplacementNamed(context, route.homePage);
             }
