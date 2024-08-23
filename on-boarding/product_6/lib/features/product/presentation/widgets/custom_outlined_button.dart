@@ -7,17 +7,19 @@ class CustomOutlinedButton extends StatelessWidget {
       this.width = 100,
       this.height = 50,
       this.color = Colors.black,
-      this.backgroundColor = Colors.white});
+      this.backgroundColor = Colors.white,
+      this.onPressed});
   final String text;
   final Color color;
   final double width;
   final double height;
   final Color backgroundColor;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith(
           (states) {

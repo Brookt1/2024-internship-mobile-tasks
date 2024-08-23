@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
@@ -22,6 +24,8 @@ class InsertProductUsecase {
         description: description,
         price: price,
         imageUrl: imageUrl);
-    return await productRepository.insertProduct(product);
+
+    final res = await productRepository.insertProduct(product);
+    return res;
   }
 }

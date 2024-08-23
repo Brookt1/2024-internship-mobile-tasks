@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'home_page.dart';
-import '../widgets/back_button.dart';
-import '../widgets/custom_outlined_button.dart';
-import '../widgets/cutom_text.dart';
+import 'pages.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -15,10 +11,13 @@ class SearchPage extends StatelessWidget {
         title: Row(
           children: [
             backButton(
-              context,
-              Color(
+              iconColor: const Color(
                 0xFF3F51F3,
               ),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.read<ProductBloc>().add(LoadAllProductEvent());
+              },
             ),
             const SizedBox(
               width: 70,
@@ -31,7 +30,7 @@ class SearchPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Row(

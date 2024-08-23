@@ -48,3 +48,12 @@ class CreateProductEvent extends ProductEvent {
       required this.price,
       required this.imageUrl});
 }
+
+class UpdateTextFieldEvent extends ProductEvent {
+  final String name;
+  final String value;
+
+  const UpdateTextFieldEvent({required this.name, required this.value});
+}
+
+class AddProductEvent extends ProductEvent {}

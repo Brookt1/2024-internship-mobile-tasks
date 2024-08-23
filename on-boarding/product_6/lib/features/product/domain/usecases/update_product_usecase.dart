@@ -22,6 +22,8 @@ class UpdateProductUsecase {
         description: description,
         price: price,
         imageUrl: imageUrl);
-    return await productRepository.updateProduct(product);
+
+    final res = await productRepository.updateProduct(product);
+    return res;
   }
 }

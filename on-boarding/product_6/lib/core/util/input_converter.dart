@@ -17,5 +17,5 @@ class InputConverter {
 }
 
 class InvalidInputFailure extends Failure {
-  const InvalidInputFailure() : super('Invalid Input');
+  const InvalidInputFailure() : super('Invalid Price Input');
 }

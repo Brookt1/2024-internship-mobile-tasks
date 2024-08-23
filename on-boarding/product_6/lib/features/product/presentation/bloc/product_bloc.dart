@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +75,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         emit(ErrorState(message: failure.message));
       },
       (data) {
-        emit(LoadedSingleProductState(result: data));
+        emit(LoadedSingleProductState(product: data));
       },
     );
   }
@@ -95,10 +97,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       call.fold(
         (failure) {
+          log(failure.message);
           emit(ErrorState(message: failure.message));
         },
         (data) {
-          _onLoadAllProducts(LoadAllProductEvent(), emit);
+          emit(
+              const ShowMessageState(message: 'Product successfully updated!'));
+          add(LoadAllProductEvent());
         },
       );
     });
@@ -109,25 +114,39 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(LoadingState());
 
     final inputEither = _inputConverter.stringToUnsignedDouble(event.price);
-    inputEither.fold((failure) {
-      emit(ErrorState(message: failure.message));
-    }, (data) async {
-      final call = await _insertProductUsecase(
+
+    await inputEither.fold(
+      (failure) async {
+        if (!emit.isDone) {
+          emit(ErrorState(message: failure.message));
+        }
+      },
+      (data) async {
+        final call = await _insertProductUsecase(
           id: event.id,
           description: event.description,
           imageUrl: event.imageUrl,
           name: event.name,
-          price: data);
+          price: data,
+        );
 
-      call.fold(
-        (failure) {
-          emit(ErrorState(message: failure.message));
-        },
-        (data) {
-          _onLoadAllProducts(LoadAllProductEvent(), emit);
-        },
-      );
-    });
+        await call.fold(
+          (failure) async {
+            if (!emit.isDone) {
+              emit(ErrorState(message: failure.message));
+            }
+          },
+          (data) async {
+            emit(const ShowMessageState(
+                message: 'Product successfully created!'));
+
+            if (!emit.isDone) {
+              add(LoadAllProductEvent());
+            }
+          },
+        );
+      },
+    );
   }
 
   Future<void> _onDeleteProduct(
@@ -138,8 +157,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       (failure) {
         emit(ErrorState(message: failure.message));
       },
-      (data) {
-        _onLoadAllProducts(LoadAllProductEvent(), emit);
+      (_) {
+        add(LoadAllProductEvent());
+        emit(const ShowMessageState(message: 'Product successfully deleted!'));
       },
     );
   }

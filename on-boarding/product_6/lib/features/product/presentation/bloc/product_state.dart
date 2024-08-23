@@ -21,11 +21,11 @@ class LoadedAllProductsState extends ProductState {
 }
 
 class LoadedSingleProductState extends ProductState {
-  final ProductEntity result;
+  final ProductEntity product;
 
-  const LoadedSingleProductState({required this.result});
+  const LoadedSingleProductState({required this.product});
   @override
-  List<Object> get props => [result];
+  List<Object> get props => [product];
 }
 
 class ErrorState extends ProductState {
@@ -34,4 +34,17 @@ class ErrorState extends ProductState {
   const ErrorState({required this.message});
   @override
   List<Object> get props => [message];
+}
+
+class UpdatedProductState extends ProductState {}
+
+class DeletedProductState extends ProductState {}
+
+class AddedProductState extends ProductState {}
+
+class AddProuctSTate extends ProductState {}
+
+class ShowMessageState extends ProductState {
+  final String message;
+  const ShowMessageState({required this.message});
 }

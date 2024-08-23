@@ -27,7 +27,7 @@ void main() {
       when(
         mockHttpClient.get(
           Uri.parse(
-            Urls.getProdcutById(testId),
+            Urls.getProductById(testId),
           ),
         ),
       ).thenAnswer(
@@ -52,7 +52,7 @@ void main() {
       when(
         mockHttpClient.get(
           Uri.parse(
-            Urls.getProdcutById(testId),
+            Urls.getProductById(testId),
           ),
         ),
       ).thenAnswer(

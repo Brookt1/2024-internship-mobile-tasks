@@ -1,10 +1,13 @@
 import 'dart:convert';
-
+import 'dart:developer';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/error/exception.dart';
 import '../models/product_model.dart';
+import 'local_data_source.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getAllProducts();
@@ -16,57 +19,99 @@ abstract class ProductRemoteDataSource {
 
   Future<bool> updateProduct(ProductModel product);
 
-  Future<bool> deleteProduct(int id);
+  Future<bool> deleteProduct(String id);
 }
 
 class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
   final http.Client client;
+  final ProductLocalDataSource productLocalDataSource;
 
-  ProductRemoteDataSourceImpl({required this.client});
+  ProductRemoteDataSourceImpl({
+    required this.client,
+    required this.productLocalDataSource,
+  });
 
   @override
   Future<List<ProductModel>> getAllProducts() async {
-    final response = await client.get(
-      Uri.parse(
-        Urls.getProducts(),
-      ),
-    );
+    try {
+      final token = await productLocalDataSource.getToken();
 
-    if (response.statusCode == 200) {
-      // Parse the JSON response
+      final response = await client.get(
+        Uri.parse(
+          Urls.getAllProducts(),
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-      // Extract the list of products from the "data" key
-      final List<dynamic> productData = jsonResponse['data'];
+      if (response.statusCode == 200) {
+        final List<dynamic> productData = jsonResponse['data'];
+        final List<ProductModel> products =
+            productData.map((json) => ProductModel.fromJson(json)).toList();
 
-      // Map each item in the list to a ProductModel and return the list
-      return productData.map((json) => ProductModel.fromJson(json)).toList();
-    } else {
+        await productLocalDataSource.cacheProducts(products);
+
+        return products;
+      } else {
+        throw ServerException();
+      }
+    } catch (e) {
       throw ServerException();
     }
   }
 
   @override
   Future<ProductModel> getProductById(String id) async {
-    final response = await client.get(
-      Uri.parse(
-        Urls.getProdcutById(id),
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      return ProductModel.fromJson(
-        json.decode(response.body),
+    try {
+      final token = await productLocalDataSource.getToken();
+      final response = await client.get(
+        Uri.parse(
+          Urls.getProductById(id),
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        final productData = jsonResponse['data'];
+        return ProductModel.fromJson(
+          productData,
+        );
+      } else {
+        throw ServerException();
+      }
+    } catch (_) {
       throw ServerException();
     }
   }
 
   @override
-  Future<bool> deleteProduct(int id) {
-    // TODO: implement deleteProduct
-    throw UnimplementedError();
+  Future<bool> deleteProduct(String id) async {
+    final token = await productLocalDataSource.getToken();
+
+    final response = await client.delete(
+      Uri.parse(
+        Urls.getProductById(id),
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    log(response.body.toString());
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw ServerException();
+    }
   }
 
   @override
@@ -76,14 +121,76 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
   }
 
   @override
-  Future<bool> insertProduct(ProductModel product) {
-    // TODO: implement insertProduct
-    throw UnimplementedError();
+  Future<bool> insertProduct(ProductModel product) async {
+    try {
+      final uri = Uri.parse(Urls.getAllProducts());
+      final request = http.MultipartRequest('POST', uri);
+
+      final imageFile = File(product.imageUrl);
+      if (!imageFile.existsSync()) {
+        throw ServerException(message: 'Image file does not exist');
+      }
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+
+      request.fields['name'] = product.name;
+      request.fields['description'] = product.description;
+      request.fields['price'] = product.price.toString();
+
+      final token = await productLocalDataSource.getToken();
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Authorization'] = 'Bearer $token';
+
+      final response = await request.send();
+
+      log('Response reason phrase: ${response.reasonPhrase}');
+
+      if (response.statusCode == 201) {
+        log('Product uploaded successfully');
+        return true;
+      } else {
+        log('Failed to upload product. Status code: ${response.statusCode}');
+
+        throw Exception();
+      }
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException();
+    }
   }
 
   @override
-  Future<bool> updateProduct(ProductModel product) {
-    // TODO: implement updateProduct
-    throw UnimplementedError();
+  Future<bool> updateProduct(ProductModel product) async {
+    final uri = Uri.parse(Urls.getProductById(product.id));
+    final request = http.Request('PUT', uri);
+
+    final body = jsonEncode({
+      'name': product.name,
+      'description': product.description,
+      'price': product.price,
+    });
+
+    request.body = body;
+
+    final token = await productLocalDataSource.getToken();
+    request.headers['Content-Type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer $token';
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      log('Product updated successfully!');
+      return true;
+    } else {
+      log('Error updating product: ${response.statusCode}');
+      return false;
+    }
   }
 }

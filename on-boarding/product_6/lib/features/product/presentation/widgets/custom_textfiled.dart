@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 
 class CustomTextfiled extends StatelessWidget {
   const CustomTextfiled(
-      {super.key, this.fillColor, this.hintText, this.suffixIcon});
+      {super.key,
+      this.fillColor,
+      this.hintText,
+      this.suffixIcon,
+      this.onChange,
+      this.controller});
   final String? hintText;
   final Icon? suffixIcon;
   final Color? fillColor;
+  final Function(String value)? onChange;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
+      onChanged: onChange,
       maxLines: null,
       minLines: null,
       expands: true,

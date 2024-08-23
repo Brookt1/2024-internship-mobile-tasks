@@ -3,9 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:product_6/core/error/failure.dart';
-import 'package:product_6/features/product/data/repositories/product_repository_impl.dart';
 import 'package:product_6/features/product/domain/entities/product_entity.dart';
-import 'package:product_6/features/product/domain/usecases/get_all_prodcuts_usecase.dart';
 import 'package:product_6/features/product/presentation/bloc/product_bloc.dart';
 
 import '../../../../helpers/test_helper.mocks.dart';
@@ -64,7 +62,7 @@ void main() {
       wait: const Duration(milliseconds: 500),
       expect: () => [
         LoadingState(),
-        const LoadedAllProductsState(result: [testProductEntity])
+        const LoadedAllProductsState(products: [testProductEntity])
       ],
     );
 
@@ -99,7 +97,7 @@ void main() {
       act: (bloc) => bloc.add(GetSingleProductEvent(id: '1')),
       expect: () => [
         LoadingState(),
-        const LoadedSingleProductState(result: testProductEntity)
+        const LoadedSingleProductState(product: testProductEntity)
       ],
     );
 

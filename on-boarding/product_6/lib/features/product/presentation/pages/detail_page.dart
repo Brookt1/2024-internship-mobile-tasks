@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
-import '../widgets/back_button.dart';
-import '../widgets/custom_image_container.dart';
-import '../widgets/custom_outlined_button.dart';
-import '../widgets/cutom_text.dart';
+import '../../../../config/route/route.dart' as route;
+import 'pages.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
-
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
@@ -24,153 +20,217 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Stack(children: [
-              const CustomImageContainer(
-                height: 256,
-                width: double.infinity,
-                imagePath: 'lib/assets/images/shoes.jpg',
-                borderRadius: BorderRadius.only(),
-              ),
-              backButton(context, Colors.indigo)
-            ]),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    children: [
-                      CustomText(
-                        text: " Men's shoe",
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                      ),
-                      CustomText(
-                        text: "(4.0)",
-                        color: Colors.grey,
-                        fontSize: 16,
+        child: BlocListener<ProductBloc, ProductState>(
+          listener: (context, state) {
+            if (state is ShowMessageState) {
+              showCustomSnackBar(context, state.message);
+            } else if (state is ErrorState) {
+              showCustomSnackBar(context, state.message);
+            } else if (state is LoadedAllProductsState) {
+              Navigator.pushReplacementNamed(context, route.homePage);
+            }
+          },
+          child: BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, state) {
+              if (state is LoadedSingleProductState) {
+                return Column(
+                  children: [
+                    Stack(children: [
+                      imageLoader(state.product.imageUrl),
+                      backButton(
+                        iconColor: Colors.indigo,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          context
+                              .read<ProductBloc>()
+                              .add(LoadAllProductEvent());
+                        },
                       )
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Text(
-                        'Derby Leather Shoes',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
                       ),
-                      Spacer(),
-                      Text(
-                        '\$120',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: CustomText(
-                      text: 'Size:',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 60,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          6,
-                          (idx) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                currentSize = idx;
-                              });
-                            },
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  color: idx == currentSize
-                                      ? const Color(0xFF3F51F3)
-                                      : null,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(8),
-                                  )),
-                              child: Center(
-                                  child: CustomText(
-                                text: '${idx + 39}',
-                                fontSize: 20,
-                                color: idx == currentSize
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.bold,
-                              )),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Row(
+                            children: [
+                              CustomText(
+                                text: 'Category',
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                              CustomText(
+                                text: '(4.0)',
+                                color: Colors.grey,
+                                fontSize: 16,
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                state.product.name,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '\$${state.product.price}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: CustomText(
+                              text: 'Size:',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 60,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  6,
+                                  (idx) => GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        currentSize = idx;
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          color: idx == currentSize
+                                              ? const Color(0xFF3F51F3)
+                                              : null,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(8),
+                                          )),
+                                      child: Center(
+                                          child: CustomText(
+                                        text: '${idx + 39}',
+                                        fontSize: 20,
+                                        color: idx == currentSize
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: CustomText(
+                                text: state.product.description,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              CustomOutlinedButton(
+                                text: 'DELETE',
+                                width: 150,
+                                height: 50,
+                                color: Colors.red,
+                                onPressed: () {
+                                  context.read<ProductBloc>().add(
+                                      DeleteProductEvent(id: state.product.id));
+                                },
+                              ),
+                              const Spacer(),
+                              CustomOutlinedButton(
+                                text: 'UPDATE',
+                                width: 150,
+                                height: 50,
+                                backgroundColor: const Color(0xFF3F51F3),
+                                color: Colors.white,
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, route.addUpdatePage,
+                                      arguments: {
+                                        'isUpdate': true,
+                                        'product': state.product,
+                                      });
+                                },
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: CustomText(
-                        text:
-                            "A derby leather shoe is a classic and versatile footwear option characterized by its open lacing system, where the shoelace eyelets are sewn on top of the vamp (the upper part of the shoe). This design feature provides a more relaxed and casual look compared to the closed lacing system of oxford shoes. Derby shoes are typically made of high-quality leather, known for its durability and elegance, making them suitable for both formal and casual occasions. With their timeless style and comfortable fit, derby leather shoes are a staple in any well-rounded wardrobe.",
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                  const Row(
-                    children: [
-                      CustomOutlinedButton(
-                        text: "DELETE",
-                        width: 150,
-                        height: 50,
-                        color: Colors.red,
-                      ),
-                      Spacer(),
-                      CustomOutlinedButton(
-                        text: "UPDATE",
-                        width: 150,
-                        height: 50,
-                        backgroundColor: Color(0xFF3F51F3),
-                        color: Colors.white,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
+                  ],
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
         ),
       ),
     );
   }
 }
+
+
+// return Column(
+//                   // mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Align(
+//                       alignment: Alignment.topLeft,
+//                       child: backButton(
+//                         iconColor: Colors.black,
+//                         onTap: () {
+//                           Navigator.of(context).pop();
+//                           context
+//                               .read<ProductBloc>()
+//                               .add(LoadAllProductEvent());
+//                         },
+//                       ),
+//                     ),
+//                     SizedBox(
+//                       height: MediaQuery.sizeOf(context).height * 0.4,
+//                     ),
+//                     const Text(
+//                       'Failed to load Product',
+//                       style: TextStyle(
+//                           color: Colors.red,
+//                           fontSize: 20,
+//                           fontWeight: FontWeight.bold),
+//                     ),
+//                   ],
+//                 );

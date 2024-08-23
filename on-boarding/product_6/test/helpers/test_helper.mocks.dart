@@ -308,7 +308,7 @@ class MockProductRemoteDataSource extends _i1.Mock
       ) as _i7.Future<bool>);
 
   @override
-  _i7.Future<bool> deleteProduct(int? id) => (super.noSuchMethod(
+  _i7.Future<bool> deleteProduct(String? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteProduct,
           [id],

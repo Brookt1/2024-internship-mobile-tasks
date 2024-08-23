@@ -97,7 +97,7 @@ void main() {
         result,
         equals(
           const Left(
-            ConnectionFailure('Failed to connect to the network'),
+            ConnectionFailure(),
           ),
         ),
       );
@@ -157,7 +157,7 @@ void main() {
         result,
         equals(
           const Left(
-            ConnectionFailure('Failed to connect to the network'),
+            ConnectionFailure(),
           ),
         ),
       );

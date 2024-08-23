@@ -10,13 +10,35 @@ abstract class Failure extends Equatable {
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure(String message) : super(message);
+  const ServerFailure(super.message);
 }
 
 class ConnectionFailure extends Failure {
-  const ConnectionFailure(String message) : super(message);
+  const ConnectionFailure()
+      : super('No Internet connection. Please check your connection.');
 }
 
 class DatabaseFailure extends Failure {
-  const DatabaseFailure(String message) : super(message);
+  const DatabaseFailure(super.message);
+}
+
+class WrongPasswordOrEmailFailure extends Failure {
+  const WrongPasswordOrEmailFailure(super.message);
+}
+
+class InvalidEmailFailure extends Failure {
+  const InvalidEmailFailure(super.message);
+}
+
+class AlreadyExistEmailFailure extends Failure {
+  const AlreadyExistEmailFailure(super.message);
+}
+
+class CacheFailure extends Failure {
+  const CacheFailure(super.message);
+}
+
+class UnkownFailure extends Failure {
+  const UnkownFailure()
+      : super('An unknown error occurred. Please try again later.');
 }

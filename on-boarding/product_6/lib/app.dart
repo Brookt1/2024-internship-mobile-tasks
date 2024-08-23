@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/route/route.dart' as route;
+import 'core/cubit/user_cubit.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/product/presentation/bloc/product_bloc.dart';
 import 'injection_container.dart';
 
@@ -9,14 +11,22 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<ProductBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<ProductBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<AuthBloc>(),
+        ),
+        BlocProvider(create: (context) => sl<UserCubit>())
+      ],
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'Poppins',
         ),
         onGenerateRoute: route.controller,
-        initialRoute: route.homePage,
+        initialRoute: route.splashPage,
       ),
     );
   }

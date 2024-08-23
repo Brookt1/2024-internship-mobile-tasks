@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-Widget backButton(BuildContext context, Color iconColor) {
+Widget backButton({required Color iconColor, required void Function()? onTap}) {
   return GestureDetector(
-    onTap: () {
-      Navigator.of(context).pop();
-    },
+    onTap: onTap,
     child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      padding: EdgeInsets.only(left: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: const EdgeInsets.only(left: 8),
       width: 40,
       height: 40,
       alignment: Alignment.center,
