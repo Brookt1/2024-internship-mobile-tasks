@@ -29,16 +29,17 @@ Flutter widgets and components are utilized to build the UI:
 - `Button`: For interactive elements.
 
 ## Screenshots
-    ![Screenshot](on-boarding\product_6\lib\assets\images\screenshot.png)
+    ![Screenshot](https://github.com/Brookt1/2024-internship-mobile-tasks/blob/2ac2b7b21038e2676bf014c1756103010c1e9e03/on-boarding/product_6/lib/assets/images/screenshot.png)
 
 ## Getting Started
 
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/2024-internship-mobile-tasks.git
+   git clone https://github.com/BrookT1/2024-internship-mobile-tasks.git
 2. Navigate to the project directory:
     ```bash
-    cd mobile/Samuel_Tolossa/ecommers
+    cd on-boarding/product-6
 3. Install dependencies:
     ```flutter
     flutter pub get
