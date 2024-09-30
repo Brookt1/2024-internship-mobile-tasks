@@ -29,7 +29,7 @@ Flutter widgets and components are utilized to build the UI:
 - `Button`: For interactive elements.
 
 ## Screenshots
-    ![Screenshot](https://github.com/Brookt1/2024-internship-mobile-tasks/blob/2ac2b7b21038e2676bf014c1756103010c1e9e03/on-boarding/product_6/lib/assets/images/screenshot.png)
+![Screenshot](on-boarding\product_6\lib\assets\images\screenshot.png)
 
 ## Getting Started
 
