@@ -27,8 +27,9 @@ Flutter widgets and components are utilized to build the UI:
 - `Image`: To display images.
 - `Text`: For displaying text.
 - `Button`: For interactive elements.
+
 ## Screenshots
-    ![Screenshot](lib\assets\images\screenshot.png)
+    ![Screenshot](on-boarding\product_6\lib\assets\images\screenshot.png)
 
 ## Getting Started
 
@@ -44,5 +45,3 @@ Flutter widgets and components are utilized to build the UI:
 4. Run the project:
     ```dart
     flutter run
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
